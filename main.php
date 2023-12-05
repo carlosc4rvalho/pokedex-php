@@ -34,14 +34,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["excluir"])) {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <title>Main</title>
     <script>
         const exibirFormularioEdicao = (id, nome, tipo) => {
@@ -49,77 +48,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["excluir"])) {
             document.getElementById('nome_pokemon_edit').value = nome;
             document.getElementById('tipo_pokemon_edit').value = tipo;
 
-            document.getElementById('formCadastro').style.display = 'none';
-            document.getElementById('formEdicao').style.display = 'block';
+            document.getElementById('formCadastro').classList.add('d-none');
+            document.getElementById('formEdicao').classList.remove('d-none');
         }
 
         const exibirFormularioCadastro = () => {
-            document.getElementById('formCadastro').style.display = 'block';
-            document.getElementById('formEdicao').style.display = 'none';
+            document.getElementById('formCadastro').classList.remove('d-none');
+            document.getElementById('formEdicao').classList.add('d-none');
         }
     </script>
 </head>
 
-<body>
-    <main>
-        <header class="d-flex justify-content-between align-items-center">
-            <div>
-                <h3>
-                    Bem-vindo,
-                    <?php echo $_SESSION["usuario_nome"]; ?>
-                </h3>
-            </div>
-            <div>
-                <a href="logout.php" class="btn btn-danger">Sair</a>
-            </div>
-        </header>
+<style>
+    body {
+        height: 100vh;
+    }
 
-        <form class="d-flex flex-column gap-5" id="formCadastro" action="main.php" method="post">
-            <header>
-                <h3>Cadastrar Pokémon</h3>
-            </header>
+    .btn-primary {
+        background-color: blue !important;
+    }
 
-            <div>
-                <label for="nome_pokemon">Nome do Pokémon:</label>
-                <input type="text" class="form-control" id="nome_pokemon" name="nome_pokemon" required>
-            </div>
+    .bg-light {
+        background-color: aliceblue !important;
+    }
 
-            <div>
-                <label for="tipo_pokemon">Tipo do Pokémon:</label>
-                <input type="text" class="form-control" id="tipo_pokemon" name="tipo_pokemon" required>
-            </div>
+    button:hover {
+        opacity: .8;
+    }
+</style>
 
-            <div>
-                <button type="submit" class="btn btn-primary" name="cadastrar">Cadastrar</button>
-            </div>
-        </form>
+<body class="d-flex flex-column justify-content-center align-items-center bg-light fs-5">
+    <!-- <header class="d-flex gap-5">
+        <div>
+            <h3>
+                Bem-vindo,
+                <?php echo $_SESSION["usuario_nome"]; ?>
+            </h3>
+        </div>
+        <div>
+            <a href="logout.php" class="btn btn-danger">Sair</a>
+        </div>
+    </header> -->
 
-        <form id="formEdicao" action="main.php" method="post" style="display: none;">
-            <header>
-                <h3>Atualizar Pokémon</h3>
-            </header>
+    <div class="d-flex justify-content-center w-100 gap-5">
 
-            <input type="hidden" id="id_pokemon_edit" name="id_pokemon">
+        <div>
 
-            <div>
-                <label for="nome_pokemon_edit">Novo Nome:</label>
-                <input type="text" class="form-control" id="nome_pokemon_edit" name="nome_pokemon" required>
-            </div>
+            <form class="d-flex flex-column gap-4" id="formCadastro" action="main.php" method="post">
+                <header>
+                    <h3>Cadastrar Pokémon</h3>
+                </header>
 
-            <div>
-                <label for="tipo_pokemon_edit">Novo Tipo:</label>
-                <input type="text" class="form-control" id="tipo_pokemon_edit" name="tipo_pokemon" required>
-            </div>
+                <div>
+                    <input type="text" class="rounded-4 p-3 border-0 bg-white" placeholder="Nome do pokemon"
+                        id="nome_pokemon" name="nome_pokemon" required>
+                </div>
 
-            <div>
-                <button type="submit" class="btn btn-success" name="editar">Salvar Edição</button>
-                <button type="button" class="btn btn-secondary" onclick="exibirFormularioCadastro()">Cancelar
-                    Edição</button>
-            </div>
-        </form>
+                <div>
+                    <input type="text" class="rounded-4 p-3 border-0 bg-white" placeholder="Seu tipo" id="tipo_pokemon"
+                        name="tipo_pokemon" required>
+                </div>
 
-        <?php listarPokemons(); ?>
-    </main>
+                <div>
+                    <button type="submit" class="btn btn-primary rounded-4 p-3 border-0 text-white w-100"
+                        name="cadastrar">Cadastrar</button>
+                </div>
+            </form>
+
+            <form class="d-flex flex-column gap-4 d-none" id="formEdicao" action="main.php" method="post">
+                <header>
+                    <h3>Atualizar Pokémon</h3>
+                </header>
+
+                <input type="hidden" id="id_pokemon_edit" name="id_pokemon">
+
+                <div>
+                    <input type="text" class="rounded-4 p-3 border-0 bg-white" placeholder="Nome do pokemon"
+                        id="nome_pokemon_edit" name="nome_pokemon" required>
+                </div>
+
+                <div>
+                    <input type="text" class="rounded-4 p-3 border-0 bg-white" placeholder="Seu Tipo"
+                        id="tipo_pokemon_edit" name="tipo_pokemon" required>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary rounded-4 p-3 border-0 text-white" name="editar">Salvar
+                        Edição</button>
+                    <button type="button" class="btn btn-danger rounded-4 p-3 border-0 text-white"
+                        onclick="exibirFormularioCadastro()">Cancelar
+                        Edição</button>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <?php listarPokemons(); ?>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
