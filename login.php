@@ -37,7 +37,7 @@
 
             <div class="d-flex flex-column gap-4">
                 <button class="btn btn-primary rounded-4 p-3 border-0 text-white" type="submit">Entrar</button>
-                <a href="recuperar_senha.php" class="text-primary text-decoration-none">Esqueceu a senha?</a>
+                <a href="#" class="text-primary text-decoration-none">Esqueceu a senha?</a>
             </div>
 
             <div class="f-5">

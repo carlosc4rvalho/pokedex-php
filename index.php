@@ -1,4 +1,4 @@
 <?php
-header("Location: login/cadastro.php");
+header("Location: cadastro.php");
 exit();
 ?>
