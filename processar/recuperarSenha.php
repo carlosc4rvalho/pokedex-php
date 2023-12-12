@@ -2,8 +2,16 @@
 // Carrega a biblioteca PHPMailer
 require '../vendor/autoload.php';
 
-// Conecta ao banco de dados (inclui o arquivo de conexão)
-require '../includes/conexao.php';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "pokemon";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
 
 // Usa as classes necessárias do PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
@@ -21,7 +29,8 @@ $smtpConfig = [
 ];
 
 // Função para enviar e-mail usando o PHPMailer
-function enviarEmail($to, $subject, $body, $config) {
+function enviarEmail($to, $subject, $body, $config)
+{
     $mail = new PHPMailer(true);
 
     try {
@@ -56,7 +65,8 @@ function enviarEmail($to, $subject, $body, $config) {
 }
 
 // Função para enviar código de recuperação
-function enviarCodigoRecuperacao($email, $conn, $smtpConfig) {
+function enviarCodigoRecuperacao($email, $conn, $smtpConfig)
+{
     // DEFINE O FUSO HORARIO COMO O HORARIO DE BRASILIA
     date_default_timezone_set('America/Sao_Paulo');
     $dia_hora = date('d/m/Y H:i:s', time());
@@ -75,23 +85,32 @@ function enviarCodigoRecuperacao($email, $conn, $smtpConfig) {
     return enviarEmail($email, 'Recuperação de Senha', $body, $smtpConfig);
 }
 
-function verificarCodigoRecuperacao($codigoInserido, $conn) {
+function verificarCodigoRecuperacao($codigoInserido, $conn)
+{
     $sql = "SELECT * FROM recupera_senha WHERE chave = '$codigoInserido'";
     $result = $conn->query($sql);
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $tempoLimite = strtotime($row['dia_hora']) + (10 * 60); // 10 minutos
+    $result = $conn->query($sql);
 
-        if (time() <= $tempoLimite) {
-            return true;
-        }
+    if (!$result) {
+        echo "Erro na consulta SQL: " . $conn->error;
     }
 
-    return false;
+
+    // if ($result->num_rows > 0) {
+    //     $row = $result->fetch_assoc();
+    //     $tempoLimite = strtotime($row['dia_hora']) + (10 * 60); // 10 minutos
+
+    //     if (time() <= $tempoLimite) {
+    //         return true;
+    //     }
+    // }
+
+    // return false;
 }
 
-function atualizarSenha($novaSenha, $codigo, $conn) {
+function atualizarSenha($novaSenha, $codigo, $conn)
+{
     $sql = "SELECT usuario FROM recupera_senha WHERE chave = '$codigo'";
     $result = $conn->query($sql);
 
